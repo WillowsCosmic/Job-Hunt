@@ -34,7 +34,7 @@ const Application = sequelize.define("application",{
     },
 
 },
-{ tableName: "application", timestamps: true }
+{ tableName: "application", timestamps: true ,createdAt: 'createdAt',updatedAt: 'updatedAt'}
 );
 
 export default Application

@@ -7,7 +7,12 @@ const sequelize = new Sequelize({
     database: "jobhunt",
     username: "root",
     password: "",
-    logging: console.log,
+    logging: (msg) => {
+        // Only show actual errors, not routine SQL
+        if (msg.includes('ERROR') || msg.includes('error') || msg.includes('failed')) {
+          console.log('Database Error:', msg);
+        }
+    },
     pool:{
         max: 10,
         min: 0,

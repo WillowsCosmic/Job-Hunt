@@ -14,7 +14,7 @@ const Company = sequelize.define("company", {
     },
     description: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     website: {
         type: DataTypes.STRING,
@@ -38,7 +38,7 @@ const Company = sequelize.define("company", {
     },
 
 },
-    { tableName: "company", timestamps: true }
+    { tableName: "company", timestamps: true ,createdAt: 'createdAt',updatedAt: 'updatedAt'}
 );
 
 export default Company

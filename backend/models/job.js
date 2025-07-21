@@ -1,3 +1,4 @@
+
 import { DataTypes } from "sequelize";
 import sequelize from "../utils/database.js";
 
@@ -18,7 +19,7 @@ const Job =
             allowNull: false
         },
         requirements: {
-            type: DataTypes.STRING,
+            type: DataTypes.JSON,
             allowNull: true
         },
         salary: {
@@ -37,7 +38,11 @@ const Job =
             type: DataTypes.INTEGER,
             allowNull: true
         },
-        company: {
+        experienceLevel:{
+            type:DataTypes.INTEGER,
+            allowNull:false
+        },
+        company: {  // ✅ Change back to original name
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
@@ -59,8 +64,7 @@ const Job =
             defaultValue: [], 
         }
     },
-    { tableName: "job", timestamps: true }
+    { tableName: "job", timestamps: true,createdAt: 'createdAt',updatedAt: 'updatedAt' }
     );
-
 
 export default Job
