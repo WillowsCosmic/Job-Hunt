@@ -1,0 +1,16 @@
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+
+# Other common files to ignore
+dist/
+build/
+.DS_Store
