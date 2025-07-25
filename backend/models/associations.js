@@ -1,16 +1,37 @@
 // models/associations.js
 import Job from './job.js';
 import Company from './company.js';
+import Application from './application.js';
+import User from './user.js';
 
-// Define the relationships using your existing 'company' column
 Company.hasMany(Job, { 
-    foreignKey: 'company', // Keep using existing column
+    foreignKey: 'company', 
     as: 'jobs' 
 });
 
 Job.belongsTo(Company, { 
-    foreignKey: 'company', // Keep using existing column  
-    as: 'companyInfo' // ✅ Different name to avoid conflict
+    foreignKey: 'company', 
+    as: 'companyInfo' 
 });
 
-export { Job, Company };
+Job.hasMany(Application, {
+    foreignKey: 'job',
+    as: 'jobApplications'  
+});
+
+Application.belongsTo(Job, { 
+    foreignKey: 'job', 
+    as: 'jobInfo' 
+});
+
+User.hasMany(Application, {
+    foreignKey: 'applicant',
+    as: 'userApplications'  
+});
+
+Application.belongsTo(User, { 
+    foreignKey: 'applicant',
+    as: 'applicantInfo' 
+});
+
+export { Job, Company, Application, User };
