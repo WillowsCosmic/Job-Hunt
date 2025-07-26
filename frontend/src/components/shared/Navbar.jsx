@@ -5,12 +5,12 @@ import { Button } from '../ui/button.jsx'
 import { Avatar, AvatarImage } from '../ui/avatar.jsx'
 import { LogOut, User2 } from 'lucide-react'
 const Navbar = () => {
-    const user = true;
+    const user = false;
     return (
         <div className='bg-white'>
             <div className="flex items-center justify-between mx-auto max-w-7xl h-16">
                 <div>
-                    <h1 className='text-2xl font-bold'>JOB<span className='text-[#F83002]'>HUNT</span></h1>
+                    <h1 className='text-2xl font-bold text-[#b907ff] text-shadow-lg/30 text-shadow-violet-500'>JOB<span className='text-[#0066ff] text-shadow-lg/30 text-shadow-blue-600'>HUNT</span></h1>
                 </div>
                 <div className="flex items-center gap-12">
                     <ul className='flex font-medium items-center gap-5'>
@@ -24,8 +24,8 @@ const Navbar = () => {
                     {
                         !user?(
                             <div className="flex items-center gap-2">
-                                <Button variant="outline">Login</Button>
-                                <Button className="bg-[#6A38C2] hover:bg=[#5b30a6]">Signup</Button>
+                                <Link to="/login"><Button variant="outline">Login</Button></Link>
+                                <Link to="/signup"><Button className="bg-[#6A38C2] hover:bg=[#5b30a6]">Signup</Button></Link>                                
                             </div>
                         ) :( 
                     <Popover>
