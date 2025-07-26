@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs"
 export const register = async (req, res) => {
     try {
         const { fullName, email, phoneNumber, password, role } = req.body;
+        console.log({ fullName, email, phoneNumber, password, role });
         if (!fullName || !email || !phoneNumber || !password || !role) {
             return res.status(400).json({
                 message: "Something is missing",
