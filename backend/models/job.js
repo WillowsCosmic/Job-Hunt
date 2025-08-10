@@ -42,7 +42,7 @@ const Job =
             type:DataTypes.INTEGER,
             allowNull:false
         },
-        company: {  // ✅ Change back to original name
+        company: {  
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {

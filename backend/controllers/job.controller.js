@@ -1,7 +1,7 @@
 import { Op } from "sequelize";
 // import Job from "../models/job.js";
 // import Company from "../models/company.js";
-import { Job, Company } from "../models/associations.js";
+import { Job, Company, Application,User } from "../models/associations.js";
 
 export const postJob = async (req, res) => {
     try {
@@ -77,22 +77,51 @@ export const getAllJobs = async (req, res) => {
         console.log(error);
     }
 }
-export const getJobById = async (req,res) =>{
+export const getJobById = async (req, res) => {
     try {
         const jobId = req.params.id;
-        const job = await Job.findByPk(jobId);
-        if(!job){
+        const job = await Job.findByPk(jobId, {
+            include: [
+                {
+                    model: Company,
+                    as: 'companyInfo',
+                    attributes: ['id', 'name', 'logo', 'location']
+                },
+                {
+                    model: Application,
+                    as: 'jobApplications',
+                    include: [{
+                        model: User,
+                        as: 'applicantInfo',
+                        attributes: ['id', 'fullname', 'email']
+                    }]
+                }
+            ]
+        });
+
+        if (!job) {
             return res.status(404).json({
                 message: "Job not found",
                 success: false
             })
         }
+
+        // Transform the data to match your frontend expectations
+        const jobData = {
+            ...job.toJSON(),
+            applications: job.jobApplications || []
+        };
+
         return res.status(200).json({
-            job,
+            job: jobData,
             success: true
         })
     } catch (error) {
-        
+        console.log(error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
     }
 }
 
