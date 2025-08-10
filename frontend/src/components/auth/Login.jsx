@@ -8,6 +8,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import { USER_API_END_POINT } from '@/utils/constant'
 import { toast } from 'sonner'
 import axios from 'axios'
+import { useDispatch, useSelector } from 'react-redux'
+import { Loader2 } from 'lucide-react'
+import { setLoading, setUser } from '@/redux/authSlice.js'
 
 const Login = () => {
     const [input, setinput] = useState({
@@ -15,29 +18,35 @@ const Login = () => {
         password: "",
         role: "",
     });
-    const navigate = useNavigate(); 
+
+    const {loading} = useSelector(store=>store.auth)
+    const dispatch = useDispatch(); 
+    const navigate = useNavigate();
 
     const changedEventHandler = (e) => {
         setinput({ ...input, [e.target.name]: e.target.value });
     }
 
-    
     const submitHandler = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post(`${USER_API_END_POINT}/login`,input,{
+            dispatch(setLoading(true))
+            const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
                 headers: {
-                    "Content-type":"application/json"
+                    "Content-type": "application/json"
                 },
-                withCredentials:true,
+                withCredentials: true,
             });
-            if(res.data.success){
+            if (res.data.success) {
+                dispatch(setUser(res.data.user))
                 navigate("/")
                 toast.success(res.data.message)
             }
         } catch (error) {
             console.log(error);
             toast.error(error.response.data.message)
+        } finally {
+            dispatch(setLoading(false))
         }
     }
 
@@ -105,14 +114,17 @@ const Login = () => {
                                 </div>
                             </RadioGroup>
                         </div>
-
-
-                        <Button
+                        {
+                            loading ? <Button className="w-full mb-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"><Loader2 className='mr-2 h-4 w-4 animate-spin' />Please Wait</Button> : <Button
                             type="submit"
                             className="w-full mb-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
                         >
                             Login
                         </Button>
+                        }
+
+
+                        
 
                         <div className="text-center">
                             <span className='text-sm'>

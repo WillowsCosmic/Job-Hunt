@@ -9,18 +9,44 @@ import { Link, useNavigate } from 'react-router-dom'
 import { USER_API_END_POINT } from '@/utils/constant'
 import axios from 'axios'
 import { toast } from 'sonner'
+import { Formik } from 'formik'
+import * as Yup from "yup"
+import { useDispatch, useSelector } from 'react-redux' // Add useSelector here
+import { setLoading } from '@/redux/authSlice.js'
+import { Loader2 } from 'lucide-react' // Add this import
 
-
+let regex = '/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i';
+const passwordRules = /^(?=.\d)(?=.[a-z])(?=.*[A-Z]).{8,}$/;
+const SignUpSchema = Yup.object().shape({
+    username: Yup.string("Enter your Username")
+    .min(8, "Username should be of minimum 8 characters length")
+    .required("Username is required")
+    .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
+    email: Yup.string("Enter your email")
+    .email("Enter a valid email")
+    .required("Email is required")
+    .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, "Invalid Email"),
+    
+    
+    
+    password: Yup
+      .string("Enter your password")
+      .matches(passwordRules, { message: "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character" })
+      .required("Password is required")
+  });
 const Signup = () => {
-
-    const [input, setinput] = useState({
+    const initialFormValues = {
         fullName: "",
         email: "",
         phoneNumber: "",
         password: "",
         role: "",
         file: ""
-    });
+    };
+    const [input, setinput] = useState(initialFormValues);
+
+    const {loading} = useSelector(store=>store.auth)
+    const dispatch = useDispatch()
     const navigate = useNavigate();
 
     const changedEventHandler = (e) => {
@@ -44,6 +70,7 @@ const Signup = () => {
         }
 
         try {
+            dispatch(setLoading(true))
             const res = await axios.post(`${USER_API_END_POINT}/register`,formData,{
                 headers: {
                     "Content-type":"multipart/form-data"
@@ -57,6 +84,8 @@ const Signup = () => {
         } catch (error) {
             console.log(error);
             toast.error(error.response.data.message)
+        } finally {
+            dispatch(setLoading(false))
         }
     }
     return (
@@ -75,7 +104,7 @@ const Signup = () => {
                             <Label className="block mb-2">Full Name</Label>
                             <Input
                                 type="text"
-                                value={input.fullname}
+                                value={input.fullName}
                                 name="fullName"
                                 onChange={changedEventHandler}
                                 placeholder="Full Name"
@@ -152,13 +181,16 @@ const Signup = () => {
                                 className="cursor-pointer"
                             />
                         </div>
-
-                        <Button
+                        {
+                            loading ? <Button className="w-full mb-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"><Loader2 className='mr-2 h-4 w-4 animate-spin' />Please Wait</Button> : <Button
                             type="submit"
                             className="w-full mb-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
                         >
                             Signup
                         </Button>
+                        }
+
+                        
 
                         <div className="text-center">
                             <span className='text-sm'>
